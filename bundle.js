@@ -139,12 +139,21 @@ function vendor(el, prop) {
     if (el.style[prop] !== undefined) {
         return prop;
     }
-    // needed for transform properties in IE 9
-    var prefixed = 'ms' + prop.charAt(0).toUpperCase() + prop.slice(1);
-    if (el.style[prefixed] !== undefined) {
-        return prefixed;
-    }
-    return '';
+    // needed for transform properties in IE 9 and Chrome < 36
+    var prefixList = ['ms', 'webkit'];
+    // let _prefix = '';
+    // for(var prefix in prefixList) {
+    //     let prefixed = prefix + prop.charAt(0).toUpperCase() + prop.slice(1);
+    //     if (el.style[prefixed] !== undefined) {
+    //         _prefix = prefixed;
+    //         break;
+    //     }
+    // }
+    prefixList = prefixList.map(function (prefix) { return "" + prefix + prop.charAt(0).toUpperCase() + prop.slice(1); });
+    console.log('test', prefixList);
+    prefixList = prefixList.filter(function (prefix) { return el.style[prefix] !== undefined; });
+    console.log('test', prefixList);
+    return prefixList.length ? prefixList[0] : '';
 }
 /**
  * Sets multiple style properties at once.
